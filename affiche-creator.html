@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OrderNow · Créateur d'Affiche</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Cairo:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --amber:#f59e0b; --bg:#0d0905; --panel:#171109; --line:rgba(255,255,255,.1); --muted:#a98e6e; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:#0d0905; color:#f0e6d8; font-family:'Inter',system-ui,sans-serif;
+        display:grid; grid-template-columns:380px 1fr; min-height:100vh; }
+  @media(max-width:900px){ body{ grid-template-columns:1fr; } }
+
+  .panel{ background:var(--panel); border-right:1px solid var(--line); padding:24px; overflow-y:auto; height:100vh; }
+  @media(max-width:900px){ .panel{ height:auto; border-right:none; border-bottom:1px solid var(--line); } }
+  .panel h1{ font-family:'Poppins',sans-serif; font-size:20px; margin:0 0 4px; letter-spacing:.5px; }
+  .panel h1 b{ color:var(--amber); }
+  .panel .sub{ color:var(--muted); font-size:13px; margin:0 0 20px; }
+
+  .seg{ display:flex; gap:6px; background:#0d0905; border:1px solid var(--line); border-radius:10px; padding:4px; margin-bottom:20px; }
+  .seg button{ flex:1; background:none; border:none; color:var(--muted); font:inherit; font-size:13px; font-weight:600;
+               padding:8px; border-radius:7px; cursor:pointer; transition:.15s; }
+  .seg button.on{ background:var(--amber); color:#1a1206; }
+
+  label{ display:block; font-size:11px; font-weight:600; letter-spacing:.6px; text-transform:uppercase; color:var(--muted); margin:14px 0 5px; }
+  input{ width:100%; background:#0d0905; border:1px solid var(--line); border-radius:9px; color:#fdf6ec;
+         font:inherit; font-size:14px; padding:10px 12px; }
+  input:focus{ outline:none; border-color:var(--amber); }
+  .row{ display:flex; gap:8px; }
+  .row > div{ flex:1; }
+
+  .actions{ display:flex; gap:10px; margin-top:24px; }
+  .actions button{ flex:1; border:none; border-radius:10px; font:inherit; font-weight:700; font-size:14px;
+                   padding:12px; cursor:pointer; transition:.15s; }
+  .btn-png{ background:var(--amber); color:#1a1206; }
+  .btn-svg{ background:#2a1c0c; color:#f0e6d8; border:1px solid var(--line) !important; }
+  .actions button:active{ transform:translateY(1px); }
+  .hint{ color:#6b573e; font-size:11px; margin-top:14px; line-height:1.5; }
+  #status{ font-size:12px; color:var(--amber); margin-top:10px; min-height:16px; }
+
+  .stage{ display:flex; align-items:center; justify-content:center; padding:32px; background:
+          radial-gradient(circle at 50% 30%, #1a1206, #0d0905 70%); }
+  #wrap{ width:min(440px,90vw); box-shadow:0 30px 80px rgba(0,0,0,.6); border-radius:14px; overflow:hidden; }
+  #wrap svg{ display:block; width:100%; height:auto; }
+</style>
+</head>
+<body>
+  <div class="panel">
+    <a href="index.html" style="color:#a98e6e;font-size:12px;text-decoration:none;display:inline-block;margin-bottom:8px">← Studio</a>
+    <h1>OrderNow <b>Affiche</b></h1>
+    <p class="sub">Écrivez vos mots — téléchargez l'affiche.</p>
+
+    <div class="seg" id="dirSeg">
+      <button data-dir="ltr" class="on">Français (LTR)</button>
+      <button data-dir="rtl">عربى (RTL)</button>
+    </div>
+
+    <label>Marque (wordmark)</label>
+    <input id="wordmark" value="ORDERNOW">
+
+    <label>Titre — ligne 1</label>
+    <input id="h1" value="Commandez">
+    <label>Titre — ligne 2</label>
+    <input id="h2" value="depuis la table">
+
+    <label>Slogan</label>
+    <input id="tagline" value="Scannez, parcourez, commandez.">
+
+    <label>Atouts (trois)</label>
+    <div class="row">
+      <div><input id="f1" value="Menu numérique"></div>
+      <div><input id="f2" value="Commande rapide"></div>
+      <div><input id="f3" value="Sans attente"></div>
+    </div>
+
+    <label>Texte du bouton</label>
+    <input id="cta" value="Commander">
+
+    <label>URL du pied de page</label>
+    <input id="url" value="ordernowtn.xyz">
+
+    <div class="actions">
+      <button class="btn-png" onclick="exportPNG()">Télécharger PNG</button>
+      <button class="btn-svg" onclick="exportSVG()">Télécharger SVG</button>
+    </div>
+    <div id="status"></div>
+    <p class="hint">Le PNG est exporté en 2480×3508 (format A, ~300 dpi) avec les polices intégrées pour correspondre exactement à l'aperçu. Gardez les titres courts pour qu'ils ne débordent pas.</p>
+  </div>
+
+  <div class="stage"><div id="wrap"></div></div>
+
+<script>
+const $ = id => document.getElementById(id);
+let DIR = 'ltr';
+const fields = ['wordmark','h1','h2','tagline','f1','f2','f3','cta','url'];
+
+const presets = {
+  rtl:{ wordmark:'أوردر ناو', h1:'اطلب', h2:'من الطاولة', tagline:'امسح، تصفّح، اطلب.',
+        f1:'قائمة رقمية', f2:'طلب سريع', f3:'بدون انتظار', cta:'اطلب الآن', url:'ordernowtn.xyz' },
+  ltr:{ wordmark:'ORDERNOW', h1:'Commandez', h2:'depuis la table', tagline:'Scannez, parcourez, commandez.',
+        f1:'Menu numérique', f2:'Commande rapide', f3:'Sans attente', cta:'Commander', url:'ordernowtn.xyz' }
+};
+
+const esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+// Coffee-cup mark in 512-space, centred ~ (256,232).
+function cupMark(){
+  return '<g fill="none" stroke="#fbbf24" stroke-width="14" stroke-linecap="round" opacity=".75" filter="url(#soft)">'+
+    '<path d="M214 178 C 196 158 232 142 214 122 C 196 102 232 86 214 68"/>'+
+    '<path d="M256 178 C 238 158 274 142 256 122 C 238 102 274 86 256 68"/>'+
+    '<path d="M298 178 C 280 158 316 142 298 122 C 280 102 316 86 298 68"/></g>'+
+    '<path d="M148 206 H364 L346 320 a44 44 0 0 1 -43 36 H191 a44 44 0 0 1 -43 -36 Z" fill="url(#cyan)" filter="url(#glow)"/>'+
+    '<path d="M366 226 q56 4 56 54 q0 50 -56 54" fill="none" stroke="url(#cyan)" stroke-width="22" stroke-linecap="round"/>'+
+    '<ellipse cx="256" cy="384" rx="158" ry="28" fill="none" stroke="url(#cyan)" stroke-width="18"/>';
+}
+
+function buildSVG(v, dir){
+  const rtl = dir === 'rtl';
+  const fam = rtl
+    ? "'Cairo','Segoe UI','Tahoma',sans-serif"
+    : "'Poppins','Inter',system-ui,sans-serif";
+  const fx = rtl ? {f1:890,f2:620,f3:350} : {f1:350,f2:620,f3:890};
+  const wls = rtl ? 4 : 10;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="1754" viewBox="0 0 1240 1754" font-family="${fam}" direction="${dir}">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="34%" r="80%">
+      <stop offset="0%" stop-color="#241708"/><stop offset="46%" stop-color="#160f06"/><stop offset="100%" stop-color="#0d0905"/>
+    </radialGradient>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#d97706"/></linearGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="14" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="soft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1240" height="1754" fill="url(#bg)"/>
+  <g stroke="#fff" stroke-opacity=".035" stroke-width="1">
+    <path d="M0 300 H1240 M0 560 H1240 M0 820 H1240 M0 1080 H1240 M0 1340 H1240"/>
+    <path d="M210 0 V1754 M450 0 V1754 M620 0 V1754 M790 0 V1754 M1030 0 V1754"/>
+  </g>
+  <text x="620" y="200" text-anchor="middle" font-size="${rtl?46:34}" font-weight="${rtl?700:600}" letter-spacing="${wls}" fill="#a98e6e">${esc(v.wordmark)}</text>
+  <g transform="translate(364,300)">${cupMark()}</g>
+  <g text-anchor="middle" fill="#f0e6d8">
+    <text x="620" y="1050" font-size="118" font-weight="700" letter-spacing="${rtl?0:-2}">${esc(v.h1)}</text>
+    <text x="620" y="${rtl?1190:1180}" font-size="118" font-weight="700" letter-spacing="${rtl?0:-2}">${esc(v.h2)}</text>
+  </g>
+  <text x="620" y="${rtl?1282:1270}" text-anchor="middle" font-size="${rtl?42:40}" font-weight="500" fill="#a98e6e">${esc(v.tagline)}</text>
+  <g text-anchor="middle" font-size="${rtl?28:26}" font-weight="${rtl?600:500}" fill="#d8c4ab">
+    <text x="${fx.f1}" y="1400">${esc(v.f1)}</text>
+    <text x="${fx.f2}" y="1400">${esc(v.f2)}</text>
+    <text x="${fx.f3}" y="1400">${esc(v.f3)}</text>
+  </g>
+  <g fill="#f59e0b" opacity=".5"><circle cx="478" cy="1392" r="3"/><circle cx="757" cy="1392" r="3"/></g>
+  <g transform="translate(620,1520)" text-anchor="middle">
+    <rect x="-240" y="-52" width="480" height="104" rx="52" fill="url(#cyan)" filter="url(#soft)"/>
+    <text x="0" y="15" font-size="42" font-weight="700" fill="#1a1206">${esc(v.cta)}</text>
+  </g>
+  <text x="620" y="1672" text-anchor="middle" font-size="28" font-weight="500" letter-spacing="4" fill="#8a7257" direction="ltr">${esc(v.url)}</text>
+</svg>`;
+}
+
+function values(){ const v={}; fields.forEach(f=>v[f]=$(f).value); return v; }
+function render(){ $('wrap').innerHTML = buildSVG(values(), DIR); }
+
+fields.forEach(f => $(f).addEventListener('input', render));
+
+document.querySelectorAll('#dirSeg button').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('#dirSeg button').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  DIR = btn.dataset.dir;
+  const p = presets[DIR];
+  Object.keys(p).forEach(k => { if($(k)) $(k).value = p[k]; });
+  render();
+}));
+
+// ── Font embedding so PNG export matches the preview ──
+let cachedFontCSS = null;
+function abToBase64(buf){ let bin=''; const b=new Uint8Array(buf); const chunk=0x8000;
+  for(let i=0;i<b.length;i+=chunk) bin+=String.fromCharCode.apply(null,b.subarray(i,i+chunk)); return btoa(bin); }
+async function fontCSS(){
+  if(cachedFontCSS) return cachedFontCSS;
+  const url='https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Cairo:wght@500;600;700;800&display=swap';
+  let css = await (await fetch(url)).text();
+  const urls = [...css.matchAll(/url\((https:[^)]+\.woff2)\)/g)].map(m=>m[1]);
+  for(const u of urls){
+    try{ const buf = await (await fetch(u)).arrayBuffer();
+      css = css.split(u).join('data:font/woff2;base64,'+abToBase64(buf)); }catch(e){}
+  }
+  cachedFontCSS = css; return css;
+}
+
+function trigger(blob, name){ const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000); }
+
+function exportSVG(){
+  trigger(new Blob([buildSVG(values(),DIR)],{type:'image/svg+xml'}), `ordernow-affiche-${DIR}.svg`);
+  status('SVG enregistré.');
+}
+
+async function exportPNG(){
+  status('Intégration des polices…');
+  let svg = buildSVG(values(), DIR);
+  try{ const css = await fontCSS(); svg = svg.replace('</defs>', `<style>${css}</style></defs>`); }
+  catch(e){ status('Polices indisponibles hors-ligne — police système utilisée.'); }
+  const img = new Image();
+  img.onload = () => {
+    const s=2, c=document.createElement('canvas'); c.width=1240*s; c.height=1754*s;
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    c.toBlob(b=>{ trigger(b, `ordernow-affiche-${DIR}.png`); status('PNG enregistré ('+c.width+'×'+c.height+').'); }, 'image/png');
+  };
+  img.onerror = () => status('Échec de l\'export — essayez Télécharger SVG.');
+  img.src = 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+}
+function status(t){ $('status').textContent = t; }
+
+document.fonts.ready.then(render);
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OrderNow Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{ box-sizing:border-box; }
+  body{ margin:0; min-height:100vh; background:radial-gradient(circle at 50% 18%, #241708, #0d0905 60%);
+        color:#f0e6d8; font-family:'Inter',system-ui,sans-serif; display:flex; flex-direction:column;
+        align-items:center; justify-content:center; padding:48px 24px; }
+  .brand{ display:flex; align-items:center; gap:18px; margin-bottom:8px; }
+  .brand svg{ width:76px; height:76px; }
+  .brand h1{ font-family:'Poppins',sans-serif; font-size:48px; font-weight:800; letter-spacing:-1.5px; margin:0; }
+  .brand h1 b{ color:#f59e0b; font-weight:800; }
+  .sub{ color:#a98e6e; font-size:16px; margin:0 0 44px; }
+  .grid{ display:grid; grid-template-columns:repeat(3,260px); gap:22px; }
+  @media(max-width:880px){ .grid{ grid-template-columns:1fr; } }
+  .card{ background:#171109; border:1px solid rgba(255,255,255,.09); border-radius:18px; padding:28px 24px;
+         text-decoration:none; color:inherit; transition:.18s; display:block; }
+  .card:hover{ border-color:#f59e0b; transform:translateY(-4px); box-shadow:0 18px 50px rgba(245,158,11,.14); }
+  .ic{ width:54px; height:54px; border-radius:14px; background:#0d0905; border:1px solid rgba(245,158,11,.3);
+       display:flex; align-items:center; justify-content:center; margin-bottom:18px; }
+  .ic svg{ width:30px; height:30px; }
+  .card h2{ font-family:'Poppins',sans-serif; font-size:21px; margin:0 0 6px; }
+  .card p{ color:#a98e6e; font-size:13.5px; line-height:1.5; margin:0; }
+  .go{ color:#f59e0b; font-size:13px; font-weight:600; margin-top:16px; display:inline-block; }
+  footer{ color:#6b573e; font-size:12px; margin-top:48px; }
+</style>
+</head>
+<body>
+  <div class="brand">
+    <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="amber" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#d97706"/></linearGradient>
+      <radialGradient id="b" cx="38%" cy="32%" r="75%"><stop offset="0%" stop-color="#2a1c0c"/><stop offset="100%" stop-color="#0d0905"/></radialGradient></defs>
+      <rect width="512" height="512" rx="116" fill="url(#b)"/><rect x="3" y="3" width="506" height="506" rx="113" fill="none" stroke="#f59e0b" stroke-opacity=".28" stroke-width="3"/>
+      <g fill="none" stroke="#fbbf24" stroke-width="14" stroke-linecap="round" opacity=".7">
+        <path d="M214 178 C 196 158 232 142 214 122 C 196 102 232 86 214 68"/>
+        <path d="M256 178 C 238 158 274 142 256 122 C 238 102 274 86 256 68"/>
+        <path d="M298 178 C 280 158 316 142 298 122 C 280 102 316 86 298 68"/>
+      </g>
+      <path d="M148 206 H364 L346 320 a44 44 0 0 1 -43 36 H191 a44 44 0 0 1 -43 -36 Z" fill="url(#amber)"/>
+      <path d="M366 226 q56 4 56 54 q0 50 -56 54" fill="none" stroke="url(#amber)" stroke-width="22" stroke-linecap="round"/>
+      <ellipse cx="256" cy="384" rx="158" ry="28" fill="none" stroke="url(#amber)" stroke-width="18"/>
+    </svg>
+    <h1>Order<b>Now</b> Studio</h1>
+  </div>
+  <p class="sub">Votre kit de design hors-ligne — affiches, logos & posts quotidiens.</p>
+
+  <div class="grid">
+    <a class="card" href="affiche-creator.html">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 7h6M9 11h6M9 15h3"/></svg></div>
+      <h2>Affiche</h2>
+      <p>Poster complet (format A, ~300 dpi). FR / Arabe. Pour l'impression & promo plein écran.</p>
+      <span class="go">Ouvrir →</span>
+    </a>
+    <a class="card" href="logo-creator.html">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="7" cy="7" r="3"/><circle cx="17" cy="17" r="3"/><path d="M9.5 9.5 14.5 14.5"/></svg></div>
+      <h2>Logo</h2>
+      <p>Icône d'app, lockup horizontal ou bannière large. PNG & SVG.</p>
+      <span class="go">Ouvrir →</span>
+    </a>
+    <a class="card" href="post-creator.html">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18"/></svg></div>
+      <h2>Post Quotidien</h2>
+      <p>Carré 1080×1080 pour Facebook & Instagram. Deux styles, FR / Arabe.</p>
+      <span class="go">Ouvrir →</span>
+    </a>
+  </div>
+
+  <footer>OrderNow Studio · fonctionne entièrement sur votre PC</footer>
+</body>
+</html>

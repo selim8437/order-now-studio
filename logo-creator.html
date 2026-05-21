@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OrderNow · Créateur de Logo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --amber:#f59e0b; --panel:#171109; --line:rgba(255,255,255,.1); --muted:#a98e6e; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:#0d0905; color:#f0e6d8; font-family:'Inter',system-ui,sans-serif;
+        display:grid; grid-template-columns:380px 1fr; min-height:100vh; }
+  @media(max-width:900px){ body{ grid-template-columns:1fr; } }
+  .panel{ background:var(--panel); border-right:1px solid var(--line); padding:24px; overflow-y:auto; height:100vh; }
+  @media(max-width:900px){ .panel{ height:auto; } }
+  a.back{ color:var(--muted); font-size:12px; text-decoration:none; }
+  a.back:hover{ color:var(--amber); }
+  .panel h1{ font-family:'Poppins',sans-serif; font-size:20px; margin:8px 0 4px; }
+  .panel h1 b{ color:var(--amber); }
+  .panel .sub{ color:var(--muted); font-size:13px; margin:0 0 18px; }
+  .seg{ display:flex; gap:6px; background:#0d0905; border:1px solid var(--line); border-radius:10px; padding:4px; margin-bottom:12px; }
+  .seg button{ flex:1; background:none; border:none; color:var(--muted); font:inherit; font-size:13px; font-weight:600; padding:8px 4px; border-radius:7px; cursor:pointer; }
+  .seg button.on{ background:var(--amber); color:#1a1206; }
+  label{ display:block; font-size:11px; font-weight:600; letter-spacing:.6px; text-transform:uppercase; color:var(--muted); margin:14px 0 5px; }
+  input{ width:100%; background:#0d0905; border:1px solid var(--line); border-radius:9px; color:#fdf6ec; font:inherit; font-size:14px; padding:10px 12px; }
+  input:focus{ outline:none; border-color:var(--amber); }
+  .row{ display:flex; gap:8px; } .row>div{ flex:1; }
+  .check{ display:flex; align-items:center; gap:8px; margin-top:14px; font-size:13px; color:#d8c4ab; }
+  .actions{ display:flex; gap:10px; margin-top:22px; }
+  .actions button{ flex:1; border:none; border-radius:10px; font:inherit; font-weight:700; font-size:14px; padding:12px; cursor:pointer; }
+  .btn-png{ background:var(--amber); color:#1a1206; } .btn-svg{ background:#2a1c0c; color:#f0e6d8; border:1px solid var(--line); }
+  #status{ font-size:12px; color:var(--amber); margin-top:10px; min-height:16px; }
+  .hint{ color:#6b573e; font-size:11px; margin-top:14px; line-height:1.5; }
+  .stage{ display:flex; align-items:center; justify-content:center; padding:40px; background:radial-gradient(circle at 50% 30%,#1a1206,#0d0905 70%); }
+  #wrap{ max-width:90vw; box-shadow:0 30px 80px rgba(0,0,0,.6); border-radius:14px; overflow:hidden; background:
+         conic-gradient(#2a1c0c 0 25%,#211608 0 50%) 0 0/28px 28px; }
+  #wrap svg{ display:block; max-width:min(640px,86vw); height:auto; }
+</style>
+</head>
+<body>
+  <div class="panel">
+    <a class="back" href="index.html">← Studio</a>
+    <h1>OrderNow <b>Logo</b></h1>
+    <p class="sub">Icône, lockup ou bannière — votre marque, téléchargeable.</p>
+
+    <label>Sortie</label>
+    <div class="seg" id="outSeg">
+      <button data-out="mark" class="on">Icône</button>
+      <button data-out="lockup">Lockup</button>
+      <button data-out="banner">Bannière</button>
+    </div>
+
+    <label>Style de la marque</label>
+    <div class="seg" id="styleSeg">
+      <button data-style="cup" class="on">Tasse</button>
+      <button data-style="letter">Lettre</button>
+    </div>
+
+    <label>Lettre (pour le style Lettre)</label>
+    <input id="letter" maxlength="2" value="O">
+
+    <label>Wordmark</label>
+    <div class="row">
+      <div><input id="w1" value="Order"></div>
+      <div><input id="w2" value="Now"></div>
+    </div>
+
+    <label>Slogan (lockup / bannière)</label>
+    <input id="tag" value="Commandez depuis votre table">
+
+    <label class="check"><input type="checkbox" id="transparent" style="width:auto"> Fond transparent (icône)</label>
+
+    <div class="actions">
+      <button class="btn-png" onclick="exportPNG()">Télécharger PNG</button>
+      <button class="btn-svg" onclick="exportSVG()">Télécharger SVG</button>
+    </div>
+    <div id="status"></div>
+    <p class="hint">Icône = 512×512 (app) · Lockup = 1200×360 horizontal · Bannière = 1500×500 (en-tête X / LinkedIn). Le PNG intègre les polices pour correspondre à l'aperçu.</p>
+  </div>
+  <div class="stage"><div id="wrap"></div></div>
+
+<script>
+const $=id=>document.getElementById(id);
+let OUT='mark', STYLE='cup';
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+const DEFS=
+  '<defs>'+
+  '<linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#d97706"/></linearGradient>'+
+  '<radialGradient id="bloom" cx="38%" cy="32%" r="75%"><stop offset="0%" stop-color="#2a1c0c"/><stop offset="100%" stop-color="#0d0905"/></radialGradient>'+
+  '<filter id="g" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'+
+  '<filter id="soft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'+
+  '</defs>';
+
+// Inner art in 512-space (no tile). style: 'cup' | 'letter'
+function markArt(style, letter){
+  if(style==='letter'){
+    return '<g fill="none" stroke="#fbbf24" stroke-width="12" stroke-linecap="round" opacity=".55">'+
+        '<path d="M232 150 C 214 132 246 118 232 100"/><path d="M280 150 C 262 132 294 118 280 100"/></g>'+
+      '<text x="256" y="372" text-anchor="middle" font-size="320" font-weight="800" fill="url(#cyan)" filter="url(#g)">'+esc(letter||'O')+'</text>';
+  }
+  // coffee cup, recentred to ~ (256,256)
+  return '<g transform="translate(-26,12)">'+
+    '<g fill="none" stroke="#fbbf24" stroke-width="14" stroke-linecap="round" opacity=".7" filter="url(#soft)">'+
+      '<path d="M214 178 C 196 158 232 142 214 122 C 196 102 232 86 214 68"/>'+
+      '<path d="M256 178 C 238 158 274 142 256 122 C 238 102 274 86 256 68"/>'+
+      '<path d="M298 178 C 280 158 316 142 298 122 C 280 102 316 86 298 68"/></g>'+
+    '<path d="M148 206 H364 L346 320 a44 44 0 0 1 -43 36 H191 a44 44 0 0 1 -43 -36 Z" fill="url(#cyan)" filter="url(#g)"/>'+
+    '<path d="M366 226 q56 4 56 54 q0 50 -56 54" fill="none" stroke="url(#cyan)" stroke-width="22" stroke-linecap="round"/>'+
+    '<ellipse cx="256" cy="384" rx="158" ry="28" fill="none" stroke="url(#cyan)" stroke-width="18"/></g>';
+}
+function tile(style, letter, transparent){
+  const bg = transparent ? '' :
+    '<rect width="512" height="512" rx="116" fill="url(#bloom)"/><rect x="3" y="3" width="506" height="506" rx="113" fill="none" stroke="#f59e0b" stroke-opacity="0.28" stroke-width="3"/>';
+  return bg + markArt(style, letter);
+}
+
+function build(){
+  const v={ letter:$('letter').value, w1:$('w1').value, w2:$('w2').value, tag:$('tag').value, transparent:$('transparent').checked };
+  const font="font-family=\"'Poppins','Inter',system-ui,sans-serif\"";
+  if(OUT==='mark'){
+    return {w:512,h:512,svg:`<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" ${font}>${DEFS}${tile(STYLE,v.letter,v.transparent)}</svg>`};
+  }
+  if(OUT==='lockup'){
+    return {w:1200,h:360,svg:`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" ${font}>${DEFS}`+
+      `<rect width="1200" height="360" fill="#0d0905"/>`+
+      `<g transform="translate(60,60)"><rect width="240" height="240" rx="56" fill="url(#bloom)"/><rect x="2" y="2" width="236" height="236" rx="54" fill="none" stroke="#f59e0b" stroke-opacity=".28" stroke-width="2"/><g transform="scale(0.469)">${markArt(STYLE,v.letter)}</g></g>`+
+      `<text x="345" y="178" font-size="118" font-weight="700" letter-spacing="-2" fill="#f0e6d8">${esc(v.w1)}<tspan fill="url(#cyan)">${esc(v.w2)}</tspan></text>`+
+      `<text x="350" y="240" font-size="33" font-weight="500" letter-spacing="2" fill="#a98e6e">${esc(v.tag)}</text></svg>`};
+  }
+  // banner 1500x500
+  return {w:1500,h:500,svg:`<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="500" viewBox="0 0 1500 500" ${font}>${DEFS}`+
+    `<rect width="1500" height="500" fill="url(#bloom)"/>`+
+    `<g stroke="#fff" stroke-opacity=".03" stroke-width="1"><path d="M0 130 H1500 M0 250 H1500 M0 370 H1500 M375 0 V500 M750 0 V500 M1125 0 V500"/></g>`+
+    `<g transform="translate(90,150)"><rect width="150" height="150" rx="36" fill="#0d0905" stroke="#f59e0b" stroke-opacity=".3" stroke-width="2"/><g transform="scale(0.293)">${markArt(STYLE,v.letter)}</g></g>`+
+    `<text x="270" y="235" font-size="78" font-weight="700" letter-spacing="-1" fill="#f0e6d8">${esc(v.w1)}<tspan fill="url(#cyan)">${esc(v.w2)}</tspan></text>`+
+    `<text x="273" y="288" font-size="27" font-weight="500" letter-spacing="1" fill="#a98e6e">${esc(v.tag)}</text>`+
+    `<g transform="translate(1080,50) scale(0.78)">${markArt(STYLE,v.letter)}</g></svg>`};
+}
+
+function render(){ $('wrap').innerHTML = build().svg; }
+['letter','w1','w2','tag','transparent'].forEach(id=>$(id).addEventListener('input',render));
+document.querySelectorAll('#outSeg button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#outSeg button').forEach(x=>x.classList.remove('on'));b.classList.add('on');OUT=b.dataset.out;render();});
+document.querySelectorAll('#styleSeg button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#styleSeg button').forEach(x=>x.classList.remove('on'));b.classList.add('on');STYLE=b.dataset.style;render();});
+
+let cachedCSS=null;
+function abToB64(buf){let s='',b=new Uint8Array(buf),c=0x8000;for(let i=0;i<b.length;i+=c)s+=String.fromCharCode.apply(null,b.subarray(i,i+c));return btoa(s);}
+async function fontCSS(){ if(cachedCSS) return cachedCSS;
+  const u='https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&display=swap';
+  let css=await (await fetch(u)).text();
+  for(const m of css.matchAll(/url\((https:[^)]+\.woff2)\)/g)){ try{const buf=await (await fetch(m[1])).arrayBuffer();css=css.split(m[1]).join('data:font/woff2;base64,'+abToB64(buf));}catch(e){} }
+  cachedCSS=css; return css; }
+function trigger(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
+function status(t){$('status').textContent=t;}
+function exportSVG(){const b=build();trigger(new Blob([b.svg],{type:'image/svg+xml'}),`ordernow-logo-${OUT}-${STYLE}.svg`);status('SVG enregistré.');}
+async function exportPNG(){ status('Intégration des polices…'); const b=build(); let svg=b.svg;
+  try{const css=await fontCSS();svg=svg.replace('</defs>',`<style>${css}</style></defs>`);}catch(e){status('Hors-ligne — police système utilisée.');}
+  const scale=OUT==='mark'?2:1.6, img=new Image();
+  img.onload=()=>{const c=document.createElement('canvas');c.width=b.w*scale;c.height=b.h*scale;c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    c.toBlob(x=>{trigger(x,`ordernow-logo-${OUT}-${STYLE}.png`);status('PNG enregistré ('+c.width+'×'+c.height+').');},'image/png');};
+  img.onerror=()=>status('Échec de l\'export — essayez Télécharger SVG.'); img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg); }
+
+document.fonts.ready.then(render); render();
+</script>
+</body>
+</html>

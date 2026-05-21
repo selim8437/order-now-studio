@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OrderNow · Créateur de Post</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Cairo:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --amber:#f59e0b; --panel:#171109; --line:rgba(255,255,255,.1); --muted:#a98e6e; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:#0d0905; color:#f0e6d8; font-family:'Inter',system-ui,sans-serif;
+        display:grid; grid-template-columns:400px 1fr; min-height:100vh; }
+  @media(max-width:920px){ body{ grid-template-columns:1fr; } }
+
+  .panel{ background:var(--panel); border-right:1px solid var(--line); padding:24px; overflow-y:auto; height:100vh; }
+  @media(max-width:920px){ .panel{ height:auto; } }
+  .panel h1{ font-family:'Poppins',sans-serif; font-size:20px; margin:0 0 4px; }
+  .panel h1 b{ color:var(--amber); }
+  .panel .sub{ color:var(--muted); font-size:13px; margin:0 0 20px; }
+
+  .seg{ display:flex; gap:6px; background:#0d0905; border:1px solid var(--line); border-radius:10px; padding:4px; margin-bottom:14px; }
+  .seg button{ flex:1; background:none; border:none; color:var(--muted); font:inherit; font-size:13px; font-weight:600;
+               padding:8px 6px; border-radius:7px; cursor:pointer; transition:.15s; }
+  .seg button.on{ background:var(--amber); color:#1a1206; }
+
+  label{ display:block; font-size:11px; font-weight:600; letter-spacing:.6px; text-transform:uppercase; color:var(--muted); margin:14px 0 5px; }
+  input,textarea{ width:100%; background:#0d0905; border:1px solid var(--line); border-radius:9px; color:#fdf6ec;
+         font:inherit; font-size:14px; padding:10px 12px; resize:vertical; }
+  input:focus,textarea:focus{ outline:none; border-color:var(--amber); }
+  .row{ display:flex; gap:8px; }
+  .row > div{ flex:1; }
+
+  .actions{ display:flex; gap:10px; margin-top:22px; }
+  .actions button{ flex:1; border:none; border-radius:10px; font:inherit; font-weight:700; font-size:14px;
+                   padding:12px; cursor:pointer; transition:.15s; }
+  .btn-png{ background:var(--amber); color:#1a1206; }
+  .btn-svg{ background:#2a1c0c; color:#f0e6d8; border:1px solid var(--line); }
+  .actions button:active{ transform:translateY(1px); }
+  .hint{ color:#6b573e; font-size:11px; margin-top:14px; line-height:1.5; }
+  #status{ font-size:12px; color:var(--amber); margin-top:10px; min-height:16px; }
+
+  .stage{ display:flex; align-items:center; justify-content:center; padding:32px;
+          background:radial-gradient(circle at 50% 30%, #1a1206, #0d0905 70%); }
+  #wrap{ width:min(560px,92vw); aspect-ratio:1/1; box-shadow:0 30px 80px rgba(0,0,0,.6); border-radius:14px; overflow:hidden; }
+  #wrap svg{ display:block; width:100%; height:100%; }
+</style>
+</head>
+<body>
+  <div class="panel">
+    <a href="index.html" style="color:#a98e6e;font-size:12px;text-decoration:none;display:inline-block;margin-bottom:8px">← Studio</a>
+    <h1>OrderNow <b>Post Quotidien</b></h1>
+    <p class="sub">1080×1080 — pour Facebook & Instagram. Écrivez, choisissez un style, téléchargez.</p>
+
+    <label>Langue</label>
+    <div class="seg" id="dirSeg">
+      <button data-dir="ltr" class="on">Français</button>
+      <button data-dir="rtl">عربى</button>
+    </div>
+
+    <label>Style</label>
+    <div class="seg" id="themeSeg">
+      <button data-theme="espresso" class="on">Espresso</button>
+      <button data-theme="amber">Ambre</button>
+    </div>
+
+    <label>Étiquette / accroche</label>
+    <input id="tag" value="Nouveau">
+
+    <label>Titre</label>
+    <textarea id="headline" rows="2">Commandez depuis votre table.</textarea>
+
+    <label>Texte (optionnel)</label>
+    <textarea id="body" rows="2">Scannez, parcourez le menu et commandez en quelques secondes.</textarea>
+
+    <label>Bouton (optionnel)</label>
+    <input id="cta" value="Commander">
+
+    <label>Pseudo / URL</label>
+    <input id="handle" value="ordernowtn.xyz">
+
+    <div class="actions">
+      <button class="btn-png" onclick="exportPNG()">Télécharger PNG</button>
+      <button class="btn-svg" onclick="exportSVG()">Télécharger SVG</button>
+    </div>
+    <div id="status"></div>
+    <p class="hint">Le titre se replie et se redimensionne automatiquement (jusqu'à 4 lignes). Le PNG est exporté en 1080×1080 avec les polices intégrées pour correspondre à l'aperçu. Laissez un champ vide pour le masquer.</p>
+  </div>
+
+  <div class="stage"><div id="wrap"></div></div>
+
+<script src="post-engine.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+let DIR='ltr', THEME='espresso';
+const fields=['tag','headline','body','cta','handle'];
+
+const presets = {
+  rtl:{ tag:'جديد', headline:'اطلب من طاولتك مباشرة.',
+        body:'امسح الرمز، تصفّح القائمة واطلب في ثوانٍ.', cta:'اطلب الآن', handle:'ordernowtn.xyz' },
+  ltr:{ tag:'Nouveau', headline:'Commandez depuis votre table.',
+        body:'Scannez, parcourez le menu et commandez en quelques secondes.', cta:'Commander', handle:'ordernowtn.xyz' }
+};
+
+function values(){ const v={}; fields.forEach(f=>v[f]=$(f).value); return v; }
+function render(){ $('wrap').innerHTML = ONPost.buildPost(values(), DIR, THEME); }
+fields.forEach(f=>$(f).addEventListener('input', render));
+
+document.querySelectorAll('#dirSeg button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#dirSeg button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+  DIR=b.dataset.dir; const p=presets[DIR]; fields.forEach(f=>{ if(p[f]!==undefined) $(f).value=p[f]; }); render();
+});
+document.querySelectorAll('#themeSeg button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#themeSeg button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+  THEME=b.dataset.theme; render();
+});
+
+// ── Font embedding for accurate PNG export ──
+let cachedCSS=null;
+function abToB64(buf){ let s='',b=new Uint8Array(buf),c=0x8000;
+  for(let i=0;i<b.length;i+=c) s+=String.fromCharCode.apply(null,b.subarray(i,i+c)); return btoa(s); }
+async function fontCSS(){
+  if(cachedCSS) return cachedCSS;
+  const u='https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Cairo:wght@500;600;700;800&display=swap';
+  let css=await (await fetch(u)).text();
+  for(const m of css.matchAll(/url\((https:[^)]+\.woff2)\)/g)){
+    try{ const buf=await (await fetch(m[1])).arrayBuffer(); css=css.split(m[1]).join('data:font/woff2;base64,'+abToB64(buf)); }catch(e){}
+  }
+  cachedCSS=css; return css;
+}
+function trigger(blob,name){ const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000); }
+function status(t){ $('status').textContent=t; }
+
+function exportSVG(){ trigger(new Blob([ONPost.buildPost(values(),DIR,THEME)],{type:'image/svg+xml'}),`ordernow-post-${DIR}-${THEME}.svg`); status('SVG enregistré.'); }
+
+async function exportPNG(){
+  status('Intégration des polices…');
+  let svg=ONPost.buildPost(values(),DIR,THEME);
+  try{ const css=await fontCSS(); svg=svg.replace('</defs>',`<style>${css}</style></defs>`); }
+  catch(e){ status('Polices indisponibles hors-ligne — police système utilisée.'); }
+  const img=new Image();
+  img.onload=()=>{ const c=document.createElement('canvas'); c.width=1080; c.height=1080;
+    c.getContext('2d').drawImage(img,0,0,1080,1080);
+    c.toBlob(b=>{ trigger(b,`ordernow-post-${DIR}-${THEME}.png`); status('PNG enregistré (1080×1080).'); },'image/png'); };
+  img.onerror=()=>status('Échec de l\'export — essayez Télécharger SVG.');
+  img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+}
+
+document.fonts.ready.then(render);
+render();
+</script>
+</body>
+</html>
