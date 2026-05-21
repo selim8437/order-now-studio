@@ -26,18 +26,20 @@
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
-  /* Coffee-cup mark drawn in 512-space, centred ~ (256,232). `fill` paints the
-     cup/handle/saucer, `steam` the rising lines. */
+  /* Coffee-cup mark drawn in 512-space, centred ~ (256,256). `fill` paints the
+     cup/handle/saucer, `steam` the rising curls. Draw order: saucer + handle
+     sit behind the cup body, with a soft coffee-surface ellipse on top. */
   function cupMark(fill, steam) {
-    return '' +
-      '<g fill="none" stroke="' + steam + '" stroke-width="14" stroke-linecap="round" opacity="0.7">' +
-        '<path d="M214 178 C 196 158 232 142 214 122 C 196 102 232 86 214 68"/>' +
-        '<path d="M256 178 C 238 158 274 142 256 122 C 238 102 274 86 256 68"/>' +
-        '<path d="M298 178 C 280 158 316 142 298 122 C 280 102 316 86 298 68"/>' +
+    return '<g transform="translate(0,12)">' +
+      '<g fill="none" stroke="' + steam + '" stroke-width="13" stroke-linecap="round" opacity="0.8">' +
+        '<path d="M230 196 C 208 172 250 150 230 124 C 214 103 236 86 230 68"/>' +
+        '<path d="M292 196 C 270 172 312 150 292 124 C 276 103 298 86 292 68"/>' +
       '</g>' +
-      '<path d="M148 206 H364 L346 320 a44 44 0 0 1 -43 36 H191 a44 44 0 0 1 -43 -36 Z" fill="' + fill + '"/>' +
-      '<path d="M366 226 q56 4 56 54 q0 50 -56 54" fill="none" stroke="' + fill + '" stroke-width="22" stroke-linecap="round"/>' +
-      '<ellipse cx="256" cy="384" rx="158" ry="28" fill="none" stroke="' + fill + '" stroke-width="18"/>';
+      '<ellipse cx="256" cy="388" rx="150" ry="24" fill="none" stroke="' + fill + '" stroke-width="16"/>' +
+      '<path d="M360 238 C 412 238 412 320 360 320" fill="none" stroke="' + fill + '" stroke-width="22" stroke-linecap="round"/>' +
+      '<path d="M150 214 H362 L344 320 a46 46 0 0 1 -45 38 H195 a46 46 0 0 1 -45 -38 Z" fill="' + fill + '"/>' +
+      '<ellipse cx="256" cy="214" rx="106" ry="18" fill="#1a1206" opacity="0.22"/>' +
+      '</g>';
   }
 
   /* Greedy word-wrap to a max character count per line. */
