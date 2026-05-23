@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=OrderNow Studio
+GenericName=Design Kit
+Comment=Offline design kit — posters, logos & daily posts
+Exec=bash -c '"$(dirname "%k")/launch-ordernow-studio.sh"'
+Icon=applications-graphics
+Terminal=false
+Categories=Graphics;Office;
+StartupNotify=true
+Keywords=design;poster;logo;affiche;
