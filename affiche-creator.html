@@ -26,9 +26,9 @@
   .seg button.on{ background:var(--amber); color:#1a1206; }
 
   label{ display:block; font-size:11px; font-weight:600; letter-spacing:.6px; text-transform:uppercase; color:var(--muted); margin:14px 0 5px; }
-  input{ width:100%; background:#0d0905; border:1px solid var(--line); border-radius:9px; color:#fdf6ec;
-         font:inherit; font-size:14px; padding:10px 12px; }
-  input:focus{ outline:none; border-color:var(--amber); }
+  input,textarea{ width:100%; background:#0d0905; border:1px solid var(--line); border-radius:9px; color:#fdf6ec;
+         font:inherit; font-size:14px; padding:10px 12px; resize:vertical; }
+  input:focus,textarea:focus{ outline:none; border-color:var(--amber); }
   .row{ display:flex; gap:8px; }
   .row > div{ flex:1; }
 
@@ -66,14 +66,21 @@
     <label>Titre — ligne 2</label>
     <input id="h2" value="depuis la table">
 
-    <label>Slogan</label>
-    <input id="tagline" value="Scannez, parcourez, commandez.">
+    <label>Description (ce que fait l'app)</label>
+    <textarea id="desc" rows="3">Vos clients scannent un QR code, parcourent le menu en photos et commandent depuis leur table — sans attendre le serveur.</textarea>
 
     <label>Atouts (trois)</label>
     <div class="row">
       <div><input id="f1" value="Menu numérique"></div>
       <div><input id="f2" value="Commande rapide"></div>
       <div><input id="f3" value="Sans attente"></div>
+    </div>
+
+    <label>Prix</label>
+    <div class="row">
+      <div style="flex:0 0 110px"><input id="priceLabel" value="À partir de"></div>
+      <div><input id="price" value="29 DT"></div>
+      <div style="flex:0 0 90px"><input id="priceNote" value="/ mois"></div>
     </div>
 
     <label>Texte du bouton</label>
@@ -95,16 +102,33 @@
 <script>
 const $ = id => document.getElementById(id);
 let DIR = 'ltr';
-const fields = ['wordmark','h1','h2','tagline','f1','f2','f3','cta','url'];
+const fields = ['wordmark','h1','h2','desc','f1','f2','f3','priceLabel','price','priceNote','cta','url'];
 
 const presets = {
-  rtl:{ wordmark:'أوردر ناو', h1:'اطلب', h2:'من الطاولة', tagline:'امسح، تصفّح، اطلب.',
-        f1:'قائمة رقمية', f2:'طلب سريع', f3:'بدون انتظار', cta:'اطلب الآن', url:'ordernowtn.xyz' },
-  ltr:{ wordmark:'ORDERNOW', h1:'Commandez', h2:'depuis la table', tagline:'Scannez, parcourez, commandez.',
-        f1:'Menu numérique', f2:'Commande rapide', f3:'Sans attente', cta:'Commander', url:'ordernowtn.xyz' }
+  rtl:{ wordmark:'أوردر ناو', h1:'اطلب', h2:'من الطاولة',
+        desc:'يقوم عملاؤك بمسح رمز QR، يتصفحون القائمة بالصور ويطلبون مباشرة من طاولتهم، دون انتظار النادل.',
+        f1:'قائمة رقمية', f2:'طلب سريع', f3:'بدون انتظار',
+        priceLabel:'ابتداءً من', price:'29 د.ت', priceNote:'/ شهر', cta:'اطلب الآن', url:'ordernowtn.xyz' },
+  ltr:{ wordmark:'ORDERNOW', h1:'Commandez', h2:'depuis la table',
+        desc:'Vos clients scannent un QR code, parcourent le menu en photos et commandent depuis leur table — sans attendre le serveur.',
+        f1:'Menu numérique', f2:'Commande rapide', f3:'Sans attente',
+        priceLabel:'À partir de', price:'29 DT', priceNote:'/ mois', cta:'Commander', url:'ordernowtn.xyz' }
 };
 
 const esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+// Greedy word-wrap to a max character count per line (max N lines).
+function wrapText(text, max, maxLines){
+  const words = String(text||'').trim().split(/\s+/).filter(Boolean);
+  const lines = []; let cur = '';
+  for(const w of words){
+    if(!cur) cur = w;
+    else if((cur+' '+w).length <= max) cur += ' '+w;
+    else { lines.push(cur); cur = w; }
+  }
+  if(cur) lines.push(cur);
+  return lines.slice(0, maxLines);
+}
 
 // Coffee-cup mark in 512-space, centred ~ (256,256).
 function cupMark(){
@@ -125,6 +149,8 @@ function buildSVG(v, dir){
     : "'Poppins','Inter',system-ui,sans-serif";
   const fx = rtl ? {f1:890,f2:620,f3:350} : {f1:350,f2:620,f3:890};
   const wls = rtl ? 4 : 10;
+  const descLines = wrapText(v.desc, rtl ? 40 : 46, 3);
+  const descBottom = 700 + Math.max(descLines.length-1,0) * 52; // baseline of last desc line
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="1754" viewBox="0 0 1240 1754" font-family="${fam}" direction="${dir}">
   <defs>
     <radialGradient id="bg" cx="50%" cy="34%" r="80%">
@@ -139,24 +165,32 @@ function buildSVG(v, dir){
     <path d="M0 300 H1240 M0 560 H1240 M0 820 H1240 M0 1080 H1240 M0 1340 H1240"/>
     <path d="M210 0 V1754 M450 0 V1754 M620 0 V1754 M790 0 V1754 M1030 0 V1754"/>
   </g>
-  <text x="620" y="200" text-anchor="middle" font-size="${rtl?46:34}" font-weight="${rtl?700:600}" letter-spacing="${wls}" fill="#a98e6e">${esc(v.wordmark)}</text>
-  <g transform="translate(364,300)">${cupMark()}</g>
+  <text x="620" y="130" text-anchor="middle" font-size="${rtl?46:34}" font-weight="${rtl?700:600}" letter-spacing="${wls}" fill="#a98e6e">${esc(v.wordmark)}</text>
+  <g transform="translate(487,158) scale(0.52)">${cupMark()}</g>
   <g text-anchor="middle" fill="#f0e6d8">
-    <text x="620" y="1050" font-size="118" font-weight="700" letter-spacing="${rtl?0:-2}">${esc(v.h1)}</text>
-    <text x="620" y="${rtl?1190:1180}" font-size="118" font-weight="700" letter-spacing="${rtl?0:-2}">${esc(v.h2)}</text>
+    <text x="620" y="500" font-size="94" font-weight="700" letter-spacing="${rtl?0:-2}">${esc(v.h1)}</text>
+    <text x="620" y="600" font-size="94" font-weight="700" letter-spacing="${rtl?0:-2}">${esc(v.h2)}</text>
   </g>
-  <text x="620" y="${rtl?1282:1270}" text-anchor="middle" font-size="${rtl?42:40}" font-weight="500" fill="#a98e6e">${esc(v.tagline)}</text>
-  <g text-anchor="middle" font-size="${rtl?28:26}" font-weight="${rtl?600:500}" fill="#d8c4ab">
-    <text x="${fx.f1}" y="1400">${esc(v.f1)}</text>
-    <text x="${fx.f2}" y="1400">${esc(v.f2)}</text>
-    <text x="${fx.f3}" y="1400">${esc(v.f3)}</text>
+  <g text-anchor="middle" font-size="36" font-weight="500" fill="#c7b29a">
+    ${descLines.map((l,i)=>`<text x="620" y="${700+i*52}">${esc(l)}</text>`).join('')}
   </g>
-  <g fill="#f59e0b" opacity=".5"><circle cx="478" cy="1392" r="3"/><circle cx="757" cy="1392" r="3"/></g>
-  <g transform="translate(620,1520)" text-anchor="middle">
+  <g text-anchor="middle" font-size="${rtl?28:26}" font-weight="${rtl?600:500}" fill="#e2d2bb">
+    <text x="${fx.f1}" y="${descBottom+90}">${esc(v.f1)}</text>
+    <text x="${fx.f2}" y="${descBottom+90}">${esc(v.f2)}</text>
+    <text x="${fx.f3}" y="${descBottom+90}">${esc(v.f3)}</text>
+  </g>
+  <g fill="#f59e0b" opacity=".55"><circle cx="478" cy="${descBottom+82}" r="3"/><circle cx="757" cy="${descBottom+82}" r="3"/></g>
+  <g transform="translate(620,1130)" text-anchor="middle">
+    <rect x="-320" y="-108" width="640" height="216" rx="32" fill="#f59e0b" fill-opacity=".09" stroke="#f59e0b" stroke-width="2.5"/>
+    <text x="0" y="-50" font-size="30" font-weight="600" letter-spacing="3" fill="#a98e6e">${esc(v.priceLabel)}</text>
+    <text x="0" y="36" font-size="104" font-weight="800" fill="url(#cyan)" direction="ltr">${esc(v.price)}</text>
+    <text x="0" y="90" font-size="30" font-weight="600" fill="#c7b29a">${esc(v.priceNote)}</text>
+  </g>
+  <g transform="translate(620,1400)" text-anchor="middle">
     <rect x="-240" y="-52" width="480" height="104" rx="52" fill="url(#cyan)" filter="url(#soft)"/>
     <text x="0" y="15" font-size="42" font-weight="700" fill="#1a1206">${esc(v.cta)}</text>
   </g>
-  <text x="620" y="1672" text-anchor="middle" font-size="28" font-weight="500" letter-spacing="4" fill="#8a7257" direction="ltr">${esc(v.url)}</text>
+  <text x="620" y="1680" text-anchor="middle" font-size="28" font-weight="500" letter-spacing="4" fill="#8a7257" direction="ltr">${esc(v.url)}</text>
 </svg>`;
 }
 
