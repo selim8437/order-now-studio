@@ -8,9 +8,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{ --amber:#f59e0b; --panel:#171109; --line:rgba(255,255,255,.1); --muted:#a98e6e; }
+  :root{ --amber:#f59e0b; --panel:#f8fafc; --line:#e2e8f0; --muted:#64748b; }
   *{ box-sizing:border-box; }
-  body{ margin:0; background:#0d0905; color:#f0e6d8; font-family:'Inter',system-ui,sans-serif;
+  body{ margin:0; background:#ffffff; color:#0f172a; font-family:'Inter',system-ui,sans-serif;
         display:grid; grid-template-columns:380px 1fr; min-height:100vh; }
   @media(max-width:900px){ body{ grid-template-columns:1fr; } }
   .panel{ background:var(--panel); border-right:1px solid var(--line); padding:24px; overflow-y:auto; height:100vh; }
@@ -20,22 +20,22 @@
   .panel h1{ font-family:'Poppins',sans-serif; font-size:20px; margin:8px 0 4px; }
   .panel h1 b{ color:var(--amber); }
   .panel .sub{ color:var(--muted); font-size:13px; margin:0 0 18px; }
-  .seg{ display:flex; gap:6px; background:#0d0905; border:1px solid var(--line); border-radius:10px; padding:4px; margin-bottom:12px; }
+  .seg{ display:flex; gap:6px; background:#f1f5f9; border:1px solid var(--line); border-radius:10px; padding:4px; margin-bottom:12px; }
   .seg button{ flex:1; background:none; border:none; color:var(--muted); font:inherit; font-size:13px; font-weight:600; padding:8px 4px; border-radius:7px; cursor:pointer; }
   .seg button.on{ background:var(--amber); color:#1a1206; }
   label{ display:block; font-size:11px; font-weight:600; letter-spacing:.6px; text-transform:uppercase; color:var(--muted); margin:14px 0 5px; }
-  input{ width:100%; background:#0d0905; border:1px solid var(--line); border-radius:9px; color:#fdf6ec; font:inherit; font-size:14px; padding:10px 12px; }
+  input{ width:100%; background:#ffffff; border:1px solid var(--line); border-radius:9px; color:#0f172a; font:inherit; font-size:14px; padding:10px 12px; }
   input:focus{ outline:none; border-color:var(--amber); }
   .row{ display:flex; gap:8px; } .row>div{ flex:1; }
-  .check{ display:flex; align-items:center; gap:8px; margin-top:14px; font-size:13px; color:#d8c4ab; }
+  .check{ display:flex; align-items:center; gap:8px; margin-top:14px; font-size:13px; color:#475569; }
   .actions{ display:flex; gap:10px; margin-top:22px; }
   .actions button{ flex:1; border:none; border-radius:10px; font:inherit; font-weight:700; font-size:14px; padding:12px; cursor:pointer; }
-  .btn-png{ background:var(--amber); color:#1a1206; } .btn-svg{ background:#2a1c0c; color:#f0e6d8; border:1px solid var(--line); }
+  .btn-png{ background:var(--amber); color:#1a1206; } .btn-svg{ background:#f1f5f9; color:#0f172a; border:1px solid var(--line); }
   #status{ font-size:12px; color:var(--amber); margin-top:10px; min-height:16px; }
-  .hint{ color:#6b573e; font-size:11px; margin-top:14px; line-height:1.5; }
-  .stage{ display:flex; align-items:center; justify-content:center; padding:40px; background:radial-gradient(circle at 50% 30%,#1a1206,#0d0905 70%); }
-  #wrap{ max-width:90vw; box-shadow:0 30px 80px rgba(0,0,0,.6); border-radius:14px; overflow:hidden; background:
-         conic-gradient(#2a1c0c 0 25%,#211608 0 50%) 0 0/28px 28px; }
+  .hint{ color:#94a3b8; font-size:11px; margin-top:14px; line-height:1.5; }
+  .stage{ display:flex; align-items:center; justify-content:center; padding:40px; background:radial-gradient(circle at 50% 30%,#f8fafc,#eef2f7 70%); }
+  #wrap{ max-width:90vw; box-shadow:0 20px 60px rgba(15,23,42,.18); border-radius:14px; overflow:hidden; background:
+         conic-gradient(#eef2f7 0 25%,#ffffff 0 50%) 0 0/28px 28px; }
   #wrap svg{ display:block; max-width:min(640px,86vw); height:auto; }
 </style>
 </head>
@@ -77,7 +77,7 @@
       <button class="btn-svg" onclick="exportSVG()">Télécharger SVG</button>
     </div>
     <div id="status"></div>
-    <p class="hint">Icône = 512×512 (app) · Lockup = 1200×360 horizontal · Bannière = 1500×500 (en-tête X / LinkedIn). Le PNG intègre les polices pour correspondre à l'aperçu.</p>
+    <p class="hint">Icône (app), Lockup horizontal ou Bannière (en-tête X / LinkedIn). Le PNG est exporté en 4K (3840 px sur le grand côté), polices intégrées pour correspondre à l'aperçu.</p>
   </div>
   <div class="stage"><div id="wrap"></div></div>
 
@@ -88,8 +88,8 @@ const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').rep
 
 const DEFS=
   '<defs>'+
-  '<linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#d97706"/></linearGradient>'+
-  '<radialGradient id="bloom" cx="38%" cy="32%" r="75%"><stop offset="0%" stop-color="#2a1c0c"/><stop offset="100%" stop-color="#0d0905"/></radialGradient>'+
+  '<linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#c2690d"/></linearGradient>'+
+  '<radialGradient id="bloom" cx="38%" cy="32%" r="75%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#f1ece4"/></radialGradient>'+
   '<filter id="g" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'+
   '<filter id="soft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'+
   '</defs>';
@@ -97,19 +97,18 @@ const DEFS=
 // Inner art in 512-space (no tile). style: 'cup' | 'letter'
 function markArt(style, letter){
   if(style==='letter'){
-    return '<g fill="none" stroke="#fbbf24" stroke-width="12" stroke-linecap="round" opacity=".55">'+
+    return '<g fill="none" stroke="#d97706" stroke-width="12" stroke-linecap="round" opacity=".55">'+
         '<path d="M232 150 C 214 132 246 118 232 100"/><path d="M280 150 C 262 132 294 118 280 100"/></g>'+
-      '<text x="256" y="372" text-anchor="middle" font-size="320" font-weight="800" fill="url(#cyan)" filter="url(#g)">'+esc(letter||'O')+'</text>';
+      '<text x="256" y="372" text-anchor="middle" font-size="320" font-weight="800" fill="url(#cyan)">'+esc(letter||'O')+'</text>';
   }
   // coffee cup, centred ~ (256,256)
   return '<g transform="translate(0,12)">'+
-    '<g fill="none" stroke="#fbbf24" stroke-width="13" stroke-linecap="round" opacity=".8" filter="url(#soft)">'+
+    '<g fill="none" stroke="#d97706" stroke-width="13" stroke-linecap="round" opacity=".85">'+
       '<path d="M230 196 C 208 172 250 150 230 124 C 214 103 236 86 230 68"/>'+
       '<path d="M292 196 C 270 172 312 150 292 124 C 276 103 298 86 292 68"/></g>'+
     '<ellipse cx="256" cy="388" rx="150" ry="24" fill="none" stroke="url(#cyan)" stroke-width="16"/>'+
     '<path d="M360 238 C 412 238 412 320 360 320" fill="none" stroke="url(#cyan)" stroke-width="22" stroke-linecap="round"/>'+
-    '<path d="M150 214 H362 L344 320 a46 46 0 0 1 -45 38 H195 a46 46 0 0 1 -45 -38 Z" fill="url(#cyan)" filter="url(#g)"/>'+
-    '<ellipse cx="256" cy="214" rx="106" ry="18" fill="#1a1206" opacity=".22"/></g>';
+    '<path d="M150 214 H362 L344 320 a46 46 0 0 1 -45 38 H195 a46 46 0 0 1 -45 -38 Z" fill="url(#cyan)"/></g>';
 }
 function tile(style, letter, transparent){
   const bg = transparent ? '' :
@@ -125,18 +124,18 @@ function build(){
   }
   if(OUT==='lockup'){
     return {w:1200,h:360,svg:`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" ${font}>${DEFS}`+
-      `<rect width="1200" height="360" fill="#0d0905"/>`+
-      `<g transform="translate(60,60)"><rect width="240" height="240" rx="56" fill="url(#bloom)"/><rect x="2" y="2" width="236" height="236" rx="54" fill="none" stroke="#f59e0b" stroke-opacity=".28" stroke-width="2"/><g transform="scale(0.469)">${markArt(STYLE,v.letter)}</g></g>`+
-      `<text x="345" y="178" font-size="118" font-weight="700" letter-spacing="-2" fill="#f0e6d8">${esc(v.w1)}<tspan fill="url(#cyan)">${esc(v.w2)}</tspan></text>`+
-      `<text x="350" y="240" font-size="33" font-weight="500" letter-spacing="2" fill="#a98e6e">${esc(v.tag)}</text></svg>`};
+      `<rect width="1200" height="360" fill="#ffffff"/>`+
+      `<g transform="translate(60,60)"><rect width="240" height="240" rx="56" fill="url(#bloom)"/><rect x="2" y="2" width="236" height="236" rx="54" fill="none" stroke="#f59e0b" stroke-opacity=".35" stroke-width="2"/><g transform="scale(0.469)">${markArt(STYLE,v.letter)}</g></g>`+
+      `<text x="345" y="178" font-size="118" font-weight="700" letter-spacing="-2" fill="#0f172a">${esc(v.w1)}<tspan fill="url(#cyan)">${esc(v.w2)}</tspan></text>`+
+      `<text x="350" y="240" font-size="33" font-weight="500" letter-spacing="2" fill="#64748b">${esc(v.tag)}</text></svg>`};
   }
   // banner 1500x500
   return {w:1500,h:500,svg:`<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="500" viewBox="0 0 1500 500" ${font}>${DEFS}`+
     `<rect width="1500" height="500" fill="url(#bloom)"/>`+
-    `<g stroke="#fff" stroke-opacity=".03" stroke-width="1"><path d="M0 130 H1500 M0 250 H1500 M0 370 H1500 M375 0 V500 M750 0 V500 M1125 0 V500"/></g>`+
-    `<g transform="translate(90,150)"><rect width="150" height="150" rx="36" fill="#0d0905" stroke="#f59e0b" stroke-opacity=".3" stroke-width="2"/><g transform="scale(0.293)">${markArt(STYLE,v.letter)}</g></g>`+
-    `<text x="270" y="235" font-size="78" font-weight="700" letter-spacing="-1" fill="#f0e6d8">${esc(v.w1)}<tspan fill="url(#cyan)">${esc(v.w2)}</tspan></text>`+
-    `<text x="273" y="288" font-size="27" font-weight="500" letter-spacing="1" fill="#a98e6e">${esc(v.tag)}</text>`+
+    `<g stroke="#0f172a" stroke-opacity=".04" stroke-width="1"><path d="M0 130 H1500 M0 250 H1500 M0 370 H1500 M375 0 V500 M750 0 V500 M1125 0 V500"/></g>`+
+    `<g transform="translate(90,150)"><rect width="150" height="150" rx="36" fill="#f8fafc" stroke="#f59e0b" stroke-opacity=".35" stroke-width="2"/><g transform="scale(0.293)">${markArt(STYLE,v.letter)}</g></g>`+
+    `<text x="270" y="235" font-size="78" font-weight="700" letter-spacing="-1" fill="#0f172a">${esc(v.w1)}<tspan fill="url(#cyan)">${esc(v.w2)}</tspan></text>`+
+    `<text x="273" y="288" font-size="27" font-weight="500" letter-spacing="1" fill="#64748b">${esc(v.tag)}</text>`+
     `<g transform="translate(1080,50) scale(0.78)">${markArt(STYLE,v.letter)}</g></svg>`};
 }
 
@@ -157,8 +156,8 @@ function status(t){$('status').textContent=t;}
 function exportSVG(){const b=build();trigger(new Blob([b.svg],{type:'image/svg+xml'}),`ordernow-logo-${OUT}-${STYLE}.svg`);status('SVG enregistré.');}
 async function exportPNG(){ status('Intégration des polices…'); const b=build(); let svg=b.svg;
   try{const css=await fontCSS();svg=svg.replace('</defs>',`<style>${css}</style></defs>`);}catch(e){status('Hors-ligne — police système utilisée.');}
-  const scale=OUT==='mark'?2:1.6, img=new Image();
-  img.onload=()=>{const c=document.createElement('canvas');c.width=b.w*scale;c.height=b.h*scale;c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+  const scale=3840/Math.max(b.w,b.h), img=new Image();
+  img.onload=()=>{const c=document.createElement('canvas');c.width=Math.round(b.w*scale);c.height=Math.round(b.h*scale);c.getContext('2d').drawImage(img,0,0,c.width,c.height);
     c.toBlob(x=>{trigger(x,`ordernow-logo-${OUT}-${STYLE}.png`);status('PNG enregistré ('+c.width+'×'+c.height+').');},'image/png');};
   img.onerror=()=>status('Échec de l\'export — essayez Télécharger SVG.'); img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg); }
 

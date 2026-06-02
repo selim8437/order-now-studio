@@ -4,16 +4,16 @@
 
   var THEMES = {
     espresso: {
-      label: 'Espresso',
-      bg: 'url(#bgEsp)', grid: 0.04,
-      head: '#fdf6ec', accent: 'url(#amber)', accentSolid: '#f59e0b',
-      body: '#c7b29a', chipBg: 'url(#amber)', chipText: '#1a1206',
-      motif: '#f59e0b', motifNode: '#fbbf24', node2: '#241708',
-      ctaBg: 'url(#amber)', ctaText: '#1a1206', handle: '#8a7257', wordSecond: 'url(#amber)'
+      label: 'Clair',
+      bg: 'url(#bgEsp)', grid: 0.05, gridColor: '#0f172a', logoTileBg: '#f8fafc', logoSteam: '#d97706',
+      head: '#0f172a', accent: 'url(#amber)', accentSolid: '#f59e0b',
+      body: '#475569', chipBg: 'url(#amber)', chipText: '#ffffff',
+      motif: '#f59e0b', motifNode: '#fbbf24', node2: '#f1ece4',
+      ctaBg: 'url(#amber)', ctaText: '#ffffff', handle: '#94a3b8', wordSecond: 'url(#amber)'
     },
     amber: {
       label: 'Amber',
-      bg: 'url(#bgAmber)', grid: 0.07,
+      bg: 'url(#bgAmber)', grid: 0.07, gridColor: '#ffffff', logoTileBg: '#0d0905', logoSteam: '#fbbf24',
       head: '#1a1206', accent: '#1a1206', accentSolid: '#1a1206',
       body: 'rgba(26,18,6,0.74)', chipBg: '#1a1206', chipText: '#fbbf24',
       motif: '#1a1206', motifNode: '#1a1206', node2: 'rgba(26,18,6,0.12)',
@@ -38,7 +38,6 @@
       '<ellipse cx="256" cy="388" rx="150" ry="24" fill="none" stroke="' + fill + '" stroke-width="16"/>' +
       '<path d="M360 238 C 412 238 412 320 360 320" fill="none" stroke="' + fill + '" stroke-width="22" stroke-linecap="round"/>' +
       '<path d="M150 214 H362 L344 320 a46 46 0 0 1 -45 38 H195 a46 46 0 0 1 -45 -38 Z" fill="' + fill + '"/>' +
-      '<ellipse cx="256" cy="214" rx="106" ry="18" fill="#1a1206" opacity="0.22"/>' +
       '</g>';
   }
 
@@ -97,25 +96,25 @@
     /* defs */
     out.push('<defs>' +
       '<radialGradient id="bgEsp" cx="50%" cy="30%" r="85%">' +
-        '<stop offset="0%" stop-color="#241708"/><stop offset="52%" stop-color="#160f06"/><stop offset="100%" stop-color="#0d0905"/></radialGradient>' +
+        '<stop offset="0%" stop-color="#ffffff"/><stop offset="52%" stop-color="#fbfaf8"/><stop offset="100%" stop-color="#f1ece4"/></radialGradient>' +
       '<linearGradient id="bgAmber" x1="0" y1="0" x2="1" y2="1">' +
         '<stop offset="0%" stop-color="#fde68a"/><stop offset="55%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#d97706"/></linearGradient>' +
       '<linearGradient id="amber" x1="0" y1="0" x2="1" y2="1">' +
-        '<stop offset="0%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#d97706"/></linearGradient>' +
+        '<stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#c2690d"/></linearGradient>' +
       '<filter id="soft" x="-60%" y="-60%" width="220%" height="220%">' +
         '<feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>' +
       '</defs>');
 
     /* canvas + grid */
     out.push('<rect width="' + W + '" height="' + H + '" fill="' + t.bg + '"/>');
-    out.push('<g stroke="#ffffff" stroke-opacity="' + t.grid + '" stroke-width="1">' +
+    out.push('<g stroke="' + (t.gridColor || '#ffffff') + '" stroke-opacity="' + t.grid + '" stroke-width="1">' +
       '<path d="M0 270 H1080 M0 540 H1080 M0 810 H1080 M270 0 V1080 M540 0 V1080 M810 0 V1080"/></g>');
 
     /* logo lockup, top-left (mirrors in rtl) */
     var logoX = rtl ? W - M - 64 : M;
     out.push('<g transform="translate(' + logoX + ',74)">');
-    out.push('<rect width="64" height="64" rx="16" fill="#0d0905" stroke="' + t.accentSolid + '" stroke-opacity="0.4" stroke-width="1.5"/>');
-    out.push('<g transform="translate(8,8) scale(0.094)">' + cupMark('url(#amber)', '#fbbf24') + '</g>');
+    out.push('<rect width="64" height="64" rx="16" fill="' + (t.logoTileBg || '#0d0905') + '" stroke="' + t.accentSolid + '" stroke-opacity="0.4" stroke-width="1.5"/>');
+    out.push('<g transform="translate(8,8) scale(0.094)">' + cupMark('url(#amber)', t.logoSteam) + '</g>');
     var wmX = rtl ? -16 : 80, wmAnchor = rtl ? 'end' : 'start';
     out.push('<text x="' + wmX + '" y="42" text-anchor="' + wmAnchor + '" font-size="34" font-weight="700" letter-spacing="-0.5" fill="' + t.head + '">Order<tspan fill="' + t.wordSecond + '">Now</tspan></text>');
     out.push('</g>');

@@ -8,9 +8,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Cairo:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{ --amber:#f59e0b; --bg:#0d0905; --panel:#171109; --line:rgba(255,255,255,.1); --muted:#a98e6e; }
+  :root{ --amber:#f59e0b; --bg:#ffffff; --panel:#f8fafc; --line:#e2e8f0; --muted:#64748b; }
   *{ box-sizing:border-box; }
-  body{ margin:0; background:#0d0905; color:#f0e6d8; font-family:'Inter',system-ui,sans-serif;
+  body{ margin:0; background:#ffffff; color:#0f172a; font-family:'Inter',system-ui,sans-serif;
         display:grid; grid-template-columns:380px 1fr; min-height:100vh; }
   @media(max-width:900px){ body{ grid-template-columns:1fr; } }
 
@@ -20,13 +20,13 @@
   .panel h1 b{ color:var(--amber); }
   .panel .sub{ color:var(--muted); font-size:13px; margin:0 0 20px; }
 
-  .seg{ display:flex; gap:6px; background:#0d0905; border:1px solid var(--line); border-radius:10px; padding:4px; margin-bottom:20px; }
+  .seg{ display:flex; gap:6px; background:#f1f5f9; border:1px solid var(--line); border-radius:10px; padding:4px; margin-bottom:20px; }
   .seg button{ flex:1; background:none; border:none; color:var(--muted); font:inherit; font-size:13px; font-weight:600;
                padding:8px; border-radius:7px; cursor:pointer; transition:.15s; }
   .seg button.on{ background:var(--amber); color:#1a1206; }
 
   label{ display:block; font-size:11px; font-weight:600; letter-spacing:.6px; text-transform:uppercase; color:var(--muted); margin:14px 0 5px; }
-  input,textarea{ width:100%; background:#0d0905; border:1px solid var(--line); border-radius:9px; color:#fdf6ec;
+  input,textarea{ width:100%; background:#ffffff; border:1px solid var(--line); border-radius:9px; color:#0f172a;
          font:inherit; font-size:14px; padding:10px 12px; resize:vertical; }
   input:focus,textarea:focus{ outline:none; border-color:var(--amber); }
   .row{ display:flex; gap:8px; }
@@ -36,20 +36,20 @@
   .actions button{ flex:1; border:none; border-radius:10px; font:inherit; font-weight:700; font-size:14px;
                    padding:12px; cursor:pointer; transition:.15s; }
   .btn-png{ background:var(--amber); color:#1a1206; }
-  .btn-svg{ background:#2a1c0c; color:#f0e6d8; border:1px solid var(--line) !important; }
+  .btn-svg{ background:#f1f5f9; color:#0f172a; border:1px solid var(--line) !important; }
   .actions button:active{ transform:translateY(1px); }
-  .hint{ color:#6b573e; font-size:11px; margin-top:14px; line-height:1.5; }
+  .hint{ color:#94a3b8; font-size:11px; margin-top:14px; line-height:1.5; }
   #status{ font-size:12px; color:var(--amber); margin-top:10px; min-height:16px; }
 
   .stage{ display:flex; align-items:center; justify-content:center; padding:32px; background:
-          radial-gradient(circle at 50% 30%, #1a1206, #0d0905 70%); }
-  #wrap{ width:min(440px,90vw); box-shadow:0 30px 80px rgba(0,0,0,.6); border-radius:14px; overflow:hidden; }
+          radial-gradient(circle at 50% 30%, #f8fafc, #eef2f7 70%); }
+  #wrap{ width:min(440px,90vw); box-shadow:0 20px 60px rgba(15,23,42,.18); border-radius:14px; overflow:hidden; }
   #wrap svg{ display:block; width:100%; height:auto; }
 </style>
 </head>
 <body>
   <div class="panel">
-    <a href="index.html" style="color:#a98e6e;font-size:12px;text-decoration:none;display:inline-block;margin-bottom:8px">← Studio</a>
+    <a href="index.html" style="color:#64748b;font-size:12px;text-decoration:none;display:inline-block;margin-bottom:8px">← Studio</a>
     <h1>OrderNow <b>Affiche</b></h1>
     <p class="sub">Écrivez vos mots — téléchargez l'affiche.</p>
 
@@ -79,7 +79,7 @@
     <label>Prix</label>
     <div class="row">
       <div style="flex:0 0 110px"><input id="priceLabel" value="À partir de"></div>
-      <div><input id="price" value="29 DT"></div>
+      <div><input id="price" value="40 DT"></div>
       <div style="flex:0 0 90px"><input id="priceNote" value="/ mois"></div>
     </div>
 
@@ -94,7 +94,7 @@
       <button class="btn-svg" onclick="exportSVG()">Télécharger SVG</button>
     </div>
     <div id="status"></div>
-    <p class="hint">Le PNG est exporté en 2480×3508 (format A, ~300 dpi) avec les polices intégrées pour correspondre exactement à l'aperçu. Gardez les titres courts pour qu'ils ne débordent pas.</p>
+    <p class="hint">Le PNG est exporté en 2716×3840 (4K, format A) avec les polices intégrées pour correspondre exactement à l'aperçu. Gardez les titres courts pour qu'ils ne débordent pas.</p>
   </div>
 
   <div class="stage"><div id="wrap"></div></div>
@@ -108,11 +108,11 @@ const presets = {
   rtl:{ wordmark:'أوردر ناو', h1:'اطلب', h2:'من الطاولة',
         desc:'يقوم عملاؤك بمسح رمز QR، يتصفحون القائمة بالصور ويطلبون مباشرة من طاولتهم، دون انتظار النادل.',
         f1:'قائمة رقمية', f2:'طلب سريع', f3:'بدون انتظار',
-        priceLabel:'ابتداءً من', price:'29 د.ت', priceNote:'/ شهر', cta:'اطلب الآن', url:'ordernowtn.xyz' },
+        priceLabel:'ابتداءً من', price:'40 د.ت', priceNote:'/ شهر', cta:'اطلب الآن', url:'ordernowtn.xyz' },
   ltr:{ wordmark:'ORDERNOW', h1:'Commandez', h2:'depuis la table',
         desc:'Vos clients scannent un QR code, parcourent le menu en photos et commandent depuis leur table — sans attendre le serveur.',
         f1:'Menu numérique', f2:'Commande rapide', f3:'Sans attente',
-        priceLabel:'À partir de', price:'29 DT', priceNote:'/ mois', cta:'Commander', url:'ordernowtn.xyz' }
+        priceLabel:'À partir de', price:'40 DT', priceNote:'/ mois', cta:'Commander', url:'ordernowtn.xyz' }
 };
 
 const esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -133,13 +133,12 @@ function wrapText(text, max, maxLines){
 // Coffee-cup mark in 512-space, centred ~ (256,256).
 function cupMark(){
   return '<g transform="translate(0,12)">'+
-    '<g fill="none" stroke="#fbbf24" stroke-width="13" stroke-linecap="round" opacity=".8" filter="url(#soft)">'+
+    '<g fill="none" stroke="#d97706" stroke-width="13" stroke-linecap="round" opacity=".8" filter="url(#soft)">'+
     '<path d="M230 196 C 208 172 250 150 230 124 C 214 103 236 86 230 68"/>'+
     '<path d="M292 196 C 270 172 312 150 292 124 C 276 103 298 86 292 68"/></g>'+
     '<ellipse cx="256" cy="388" rx="150" ry="24" fill="none" stroke="url(#cyan)" stroke-width="16"/>'+
     '<path d="M360 238 C 412 238 412 320 360 320" fill="none" stroke="url(#cyan)" stroke-width="22" stroke-linecap="round"/>'+
-    '<path d="M150 214 H362 L344 320 a46 46 0 0 1 -45 38 H195 a46 46 0 0 1 -45 -38 Z" fill="url(#cyan)" filter="url(#glow)"/>'+
-    '<ellipse cx="256" cy="214" rx="106" ry="18" fill="#1a1206" opacity=".22"/></g>';
+    '<path d="M150 214 H362 L344 320 a46 46 0 0 1 -45 38 H195 a46 46 0 0 1 -45 -38 Z" fill="url(#cyan)" filter="url(#glow)"/></g>';
 }
 
 function buildSVG(v, dir){
@@ -154,44 +153,44 @@ function buildSVG(v, dir){
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="1754" viewBox="0 0 1240 1754" font-family="${fam}" direction="${dir}">
   <defs>
     <radialGradient id="bg" cx="50%" cy="34%" r="80%">
-      <stop offset="0%" stop-color="#241708"/><stop offset="46%" stop-color="#160f06"/><stop offset="100%" stop-color="#0d0905"/>
+      <stop offset="0%" stop-color="#ffffff"/><stop offset="46%" stop-color="#fbfaf8"/><stop offset="100%" stop-color="#f1ece4"/>
     </radialGradient>
-    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#d97706"/></linearGradient>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#c2690d"/></linearGradient>
     <filter id="glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="14" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
     <filter id="soft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
   </defs>
   <rect width="1240" height="1754" fill="url(#bg)"/>
-  <g stroke="#fff" stroke-opacity=".035" stroke-width="1">
+  <g stroke="#0f172a" stroke-opacity=".05" stroke-width="1">
     <path d="M0 300 H1240 M0 560 H1240 M0 820 H1240 M0 1080 H1240 M0 1340 H1240"/>
     <path d="M210 0 V1754 M450 0 V1754 M620 0 V1754 M790 0 V1754 M1030 0 V1754"/>
   </g>
   <g transform="translate(620 877) scale(0.82) translate(-620 -877)">
-  <text x="620" y="130" text-anchor="middle" font-size="${rtl?46:34}" font-weight="${rtl?700:600}" letter-spacing="${wls}" fill="#a98e6e">${esc(v.wordmark)}</text>
+  <text x="620" y="130" text-anchor="middle" font-size="${rtl?46:34}" font-weight="${rtl?700:600}" letter-spacing="${wls}" fill="#64748b">${esc(v.wordmark)}</text>
   <g transform="translate(487,158) scale(0.52)">${cupMark()}</g>
-  <g text-anchor="middle" fill="#f0e6d8">
+  <g text-anchor="middle" fill="#0f172a">
     <text x="620" y="500" font-size="94" font-weight="700" letter-spacing="${rtl?0:-2}">${esc(v.h1)}</text>
     <text x="620" y="600" font-size="94" font-weight="700" letter-spacing="${rtl?0:-2}">${esc(v.h2)}</text>
   </g>
-  <g text-anchor="middle" font-size="36" font-weight="500" fill="#c7b29a">
+  <g text-anchor="middle" font-size="36" font-weight="500" fill="#475569">
     ${descLines.map((l,i)=>`<text x="620" y="${700+i*52}">${esc(l)}</text>`).join('')}
   </g>
-  <g text-anchor="middle" font-size="${rtl?28:26}" font-weight="${rtl?600:500}" fill="#e2d2bb">
+  <g text-anchor="middle" font-size="${rtl?28:26}" font-weight="${rtl?600:500}" fill="#334155">
     <text x="${fx.f1}" y="${descBottom+90}">${esc(v.f1)}</text>
     <text x="${fx.f2}" y="${descBottom+90}">${esc(v.f2)}</text>
     <text x="${fx.f3}" y="${descBottom+90}">${esc(v.f3)}</text>
   </g>
-  <g fill="#f59e0b" opacity=".55"><circle cx="478" cy="${descBottom+82}" r="3"/><circle cx="757" cy="${descBottom+82}" r="3"/></g>
+  <g fill="#f59e0b" opacity=".7"><circle cx="478" cy="${descBottom+82}" r="3"/><circle cx="757" cy="${descBottom+82}" r="3"/></g>
   <g transform="translate(620,1130)" text-anchor="middle">
-    <rect x="-320" y="-108" width="640" height="216" rx="32" fill="#f59e0b" fill-opacity=".09" stroke="#f59e0b" stroke-width="2.5"/>
-    <text x="0" y="-50" font-size="30" font-weight="600" letter-spacing="3" fill="#a98e6e">${esc(v.priceLabel)}</text>
+    <rect x="-320" y="-108" width="640" height="216" rx="32" fill="#f59e0b" fill-opacity=".08" stroke="#f59e0b" stroke-width="2.5"/>
+    <text x="0" y="-50" font-size="30" font-weight="600" letter-spacing="3" fill="#64748b">${esc(v.priceLabel)}</text>
     <text x="0" y="36" font-size="104" font-weight="800" fill="url(#cyan)" direction="ltr">${esc(v.price)}</text>
-    <text x="0" y="90" font-size="30" font-weight="600" fill="#c7b29a">${esc(v.priceNote)}</text>
+    <text x="0" y="90" font-size="30" font-weight="600" fill="#475569">${esc(v.priceNote)}</text>
   </g>
   <g transform="translate(620,1400)" text-anchor="middle">
     <rect x="-240" y="-52" width="480" height="104" rx="52" fill="url(#cyan)" filter="url(#soft)"/>
-    <text x="0" y="15" font-size="42" font-weight="700" fill="#1a1206">${esc(v.cta)}</text>
+    <text x="0" y="15" font-size="42" font-weight="700" fill="#ffffff">${esc(v.cta)}</text>
   </g>
-  <text x="620" y="1680" text-anchor="middle" font-size="28" font-weight="500" letter-spacing="4" fill="#8a7257" direction="ltr">${esc(v.url)}</text>
+  <text x="620" y="1680" text-anchor="middle" font-size="28" font-weight="500" letter-spacing="4" fill="#94a3b8" direction="ltr">${esc(v.url)}</text>
   </g>
 </svg>`;
 }
@@ -241,7 +240,7 @@ async function exportPNG(){
   catch(e){ status('Polices indisponibles hors-ligne — police système utilisée.'); }
   const img = new Image();
   img.onload = () => {
-    const s=2, c=document.createElement('canvas'); c.width=1240*s; c.height=1754*s;
+    const s=3840/1754, c=document.createElement('canvas'); c.width=Math.round(1240*s); c.height=Math.round(1754*s);
     c.getContext('2d').drawImage(img,0,0,c.width,c.height);
     c.toBlob(b=>{ trigger(b, `ordernow-affiche-${DIR}.png`); status('PNG enregistré ('+c.width+'×'+c.height+').'); }, 'image/png');
   };
