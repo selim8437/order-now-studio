@@ -67,21 +67,30 @@
     <input id="h2" value="depuis la table">
 
     <label>Description (ce que fait l'app)</label>
-    <textarea id="desc" rows="3">Vos clients scannent un QR code, parcourent le menu en photos et commandent depuis leur table — sans attendre le serveur.</textarea>
+    <textarea id="desc" rows="3">Vos clients scannent un QR code, parcourent le menu, commandent et suivent leur commande en direct — sans attendre le serveur.</textarea>
 
     <label>Atouts (trois)</label>
     <div class="row">
       <div><input id="f1" value="Menu numérique"></div>
       <div><input id="f2" value="Commande rapide"></div>
-      <div><input id="f3" value="Sans attente"></div>
+      <div><input id="f3" value="Suivi en direct"></div>
     </div>
 
-    <label>Prix</label>
+    <label>Formules (3)</label>
     <div class="row">
-      <div style="flex:0 0 110px"><input id="priceLabel" value="À partir de"></div>
-      <div><input id="price" value="40 DT"></div>
-      <div style="flex:0 0 90px"><input id="priceNote" value="/ mois"></div>
+      <div><input id="t1name" value="Menu"></div>
+      <div style="flex:0 0 110px"><input id="t1price" value="20 DT"></div>
     </div>
+    <div class="row">
+      <div><input id="t2name" value="Commandes"></div>
+      <div style="flex:0 0 110px"><input id="t2price" value="40 DT"></div>
+    </div>
+    <div class="row">
+      <div><input id="t3name" value="Suivi"></div>
+      <div style="flex:0 0 110px"><input id="t3price" value="50 DT"></div>
+    </div>
+    <label>Suffixe prix</label>
+    <input id="priceNote" value="/ mois">
 
     <label>Texte du bouton</label>
     <input id="cta" value="Commander">
@@ -102,17 +111,19 @@
 <script>
 const $ = id => document.getElementById(id);
 let DIR = 'ltr';
-const fields = ['wordmark','h1','h2','desc','f1','f2','f3','priceLabel','price','priceNote','cta','url'];
+const fields = ['wordmark','h1','h2','desc','f1','f2','f3','t1name','t1price','t2name','t2price','t3name','t3price','priceNote','cta','url'];
 
 const presets = {
   rtl:{ wordmark:'أوردر ناو', h1:'اطلب', h2:'من الطاولة',
-        desc:'يقوم عملاؤك بمسح رمز QR، يتصفحون القائمة بالصور ويطلبون مباشرة من طاولتهم، دون انتظار النادل.',
-        f1:'قائمة رقمية', f2:'طلب سريع', f3:'بدون انتظار',
-        priceLabel:'ابتداءً من', price:'40 د.ت', priceNote:'/ شهر', cta:'اطلب الآن', url:'ordernowtn.xyz' },
+        desc:'يقوم عملاؤك بمسح رمز QR، يتصفحون القائمة، يطلبون ويتابعون طلبهم مباشرة من طاولتهم دون انتظار النادل.',
+        f1:'قائمة رقمية', f2:'طلب سريع', f3:'تتبع مباشر',
+        t1name:'القائمة', t1price:'20 د.ت', t2name:'الطلبات', t2price:'40 د.ت', t3name:'التتبع', t3price:'50 د.ت',
+        priceNote:'/ شهر', cta:'اطلب الآن', url:'ordernowtn.xyz' },
   ltr:{ wordmark:'ORDERNOW', h1:'Commandez', h2:'depuis la table',
-        desc:'Vos clients scannent un QR code, parcourent le menu en photos et commandent depuis leur table — sans attendre le serveur.',
-        f1:'Menu numérique', f2:'Commande rapide', f3:'Sans attente',
-        priceLabel:'À partir de', price:'40 DT', priceNote:'/ mois', cta:'Commander', url:'ordernowtn.xyz' }
+        desc:'Vos clients scannent un QR code, parcourent le menu, commandent et suivent leur commande en direct — sans attendre le serveur.',
+        f1:'Menu numérique', f2:'Commande rapide', f3:'Suivi en direct',
+        t1name:'Menu', t1price:'20 DT', t2name:'Commandes', t2price:'40 DT', t3name:'Suivi', t3price:'50 DT',
+        priceNote:'/ mois', cta:'Commander', url:'ordernowtn.xyz' }
 };
 
 const esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -180,11 +191,19 @@ function buildSVG(v, dir){
     <text x="${fx.f3}" y="${descBottom+90}">${esc(v.f3)}</text>
   </g>
   <g fill="#f59e0b" opacity=".7"><circle cx="478" cy="${descBottom+82}" r="3"/><circle cx="757" cy="${descBottom+82}" r="3"/></g>
-  <g transform="translate(620,1130)" text-anchor="middle">
-    <rect x="-320" y="-108" width="640" height="216" rx="32" fill="#f59e0b" fill-opacity=".08" stroke="#f59e0b" stroke-width="2.5"/>
-    <text x="0" y="-50" font-size="30" font-weight="600" letter-spacing="3" fill="#64748b">${esc(v.priceLabel)}</text>
-    <text x="0" y="36" font-size="104" font-weight="800" fill="url(#cyan)" direction="ltr">${esc(v.price)}</text>
-    <text x="0" y="90" font-size="30" font-weight="600" fill="#475569">${esc(v.priceNote)}</text>
+  <g transform="translate(0,1124)">
+    ${[
+      { cx: rtl ? 1010 : 230, name: v.t1name, price: v.t1price, hot: false },
+      { cx: 620,              name: v.t2name, price: v.t2price, hot: true  },
+      { cx: rtl ? 230 : 1010, name: v.t3name, price: v.t3price, hot: false },
+    ].map(t => `
+    <g transform="translate(${t.cx},0)" text-anchor="middle">
+      <rect x="-180" y="-124" width="360" height="248" rx="28" fill="${t.hot ? '#f59e0b' : '#ffffff'}" fill-opacity="${t.hot ? '0.12' : '1'}" stroke="#f59e0b" stroke-width="${t.hot ? '3.5' : '2'}" stroke-opacity="${t.hot ? '1' : '0.4'}"/>
+      ${t.hot ? `<g transform="translate(0,-124)"><rect x="-92" y="-21" width="184" height="42" rx="21" fill="#f59e0b"/><text y="7" font-size="22" font-weight="700" fill="#1a1206">${rtl ? 'الأكثر طلباً' : 'Populaire'}</text></g>` : ''}
+      <text x="0" y="-46" font-size="32" font-weight="600" letter-spacing="1" fill="#334155">${esc(t.name)}</text>
+      <text x="0" y="34" font-size="70" font-weight="800" fill="url(#cyan)" direction="ltr">${esc(t.price)}</text>
+      <text x="0" y="80" font-size="26" font-weight="600" fill="#64748b">${esc(v.priceNote)}</text>
+    </g>`).join('')}
   </g>
   <g transform="translate(620,1400)" text-anchor="middle">
     <rect x="-240" y="-52" width="480" height="104" rx="52" fill="url(#cyan)" filter="url(#soft)"/>
